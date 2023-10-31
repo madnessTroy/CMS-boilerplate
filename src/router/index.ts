@@ -1,22 +1,26 @@
 import {createRouter, createWebHistory} from 'vue-router'
+import {dashboardRoutes} from "@/router/routes/dashboardRoutes";
+import {userRoutes} from "@/router/routes/userRoutes";
+import {profileRoutes} from "@/router/routes/profileRoutes";
+
+const routes = [
+    ...dashboardRoutes,
+
+    ...userRoutes,
+
+    ...profileRoutes,
+
+    {
+        path: '/:catchAll(.*)',
+        name: '404',
+        component: () => import('@/views/404.vue'),
+    }
+]
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
-    routes: [
-        {
-            name: 'dashboard.index',
-            path: '/',
-            alias: '/dashboard',
-            component: () => import('@/views/Dashboard.vue')
-        },
-
-        // 404 page
-        {
-            path: '/:catchAll(.*)',
-            name: 'not-found',
-            // component: NotFound,
-        }
-    ]
+    routes
 })
 
-export default router
+export {router, routes}
+

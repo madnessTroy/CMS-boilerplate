@@ -1,8 +1,16 @@
-export type Route = {
+export type SidebarItem = {
     name: string,
-    path: string,
-    alias: string,
-    component: function
+    route: string,
+    icon: string
+    isAuth: boolean,
+    hasChild: boolean,
+    children?: Array<ChildrenSidebarItem>
+}
+
+export type ChildrenSidebarItem = {
+    name: string,
+    route: string,
+    isAuth: boolean,
 }
 
 export type Paginate = {
@@ -11,3 +19,5 @@ export type Paginate = {
     total: null | number,
     sort?: 'ASC' | 'DESC'
 }
+
+// import
