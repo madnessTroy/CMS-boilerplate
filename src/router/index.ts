@@ -8,7 +8,7 @@ const routes = [
 
     ...userRoutes,
 
-    // ...profileRoutes,
+    ...profileRoutes,
 
     {
         name: '404',

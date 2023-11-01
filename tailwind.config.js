@@ -84,6 +84,9 @@ module.exports = {
                     to: {height: 0},
                 },
             },
+            transitionProperty: {
+                'spacing': 'margin, padding',
+            },
             animation: {
                 "accordion-down": "accordion-down 0.2s ease-out",
                 "accordion-up": "accordion-up 0.2s ease-out",

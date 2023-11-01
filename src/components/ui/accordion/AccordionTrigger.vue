@@ -7,7 +7,14 @@ import {
 import {ChevronDown} from 'lucide-vue-next'
 import {cn} from '@/lib/utils'
 
-const props = defineProps<AccordionTriggerProps & { class?: string }>()
+import {computed} from "vue";
+
+interface ExtendAccordionTriggerProps extends AccordionTriggerProps {
+    showArrow: boolean
+}
+
+const props = defineProps<ExtendAccordionTriggerProps & { class?: string }>()
+const showArrow = computed(() => props.showArrow)
 </script>
 
 <template>
@@ -23,6 +30,7 @@ const props = defineProps<AccordionTriggerProps & { class?: string }>()
         >
             <slot/>
             <ChevronDown
+                v-show="showArrow"
                 class="h-4 w-4 shrink-0 transition-transform duration-200"
             />
         </AccordionTrigger>

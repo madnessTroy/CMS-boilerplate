@@ -2,7 +2,7 @@
     <template v-if="!isNotFound">
         <Sidebar></Sidebar>
 
-        <div class="p-4 sm:ml-64">
+        <div class="p-4 transition-spacing duration-200" :class="[isCompactSidebar? 'sm:ml-20' : 'sm:ml-64']">
 
             <Header></Header>
 
@@ -22,8 +22,13 @@ import {computed} from "vue";
 
 import Header from '@/layouts/Header.vue'
 import Sidebar from "@/layouts/Sidebar.vue";
+import {useGeneralStore} from "@/stores/general";
+import {storeToRefs} from "pinia";
 
 const route = useRoute()
+const generalStore = useGeneralStore()
+
+const {isCompactSidebar} = storeToRefs(generalStore)
 
 const isNotFound = computed(_ => route.name === '404')
 </script>
