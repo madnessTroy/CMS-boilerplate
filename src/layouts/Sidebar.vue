@@ -22,43 +22,47 @@
             <!--            </div>-->
 
             <!-- No sub-menu -->
-            <div v-for="(item, $idx) in SidebarItems"
+            <div v-for="(item, $idx) in sidebarItems"
                  :key="$idx"
                  class="cursor-pointer mt-2"
             >
                 <div class="flex items-center p-3 w-full transition hover:bg-slate-200 rounded-xl"
                      :class="{'bg-slate-200': currentActive(item)}"
-                     v-if="!item.hasChild">
-                    <span class="material-icons material-icons-outlined md-24">{{ item.icon }}</span>
+                     v-if="!item.children || !item.children.length">
+                    <span class="material-icons material-icons-outlined md-24">{{ item.meta?.icon }}</span>
                     <RouterLink
-                        class="ms-4"
-                        :to="{name: item.route}"
+                        class="w-full ms-4 capitalize"
+                        :to="{name: item.name}"
                     >
-                        {{ item.name }}
+                        {{ item.meta?.title }}
                     </RouterLink>
                 </div>
 
                 <!-- Has sub-menu -->
                 <template v-else>
-                    <Accordion class="w-full" collapsible type="single" :model-value="activeAccordion"
-                               @click="onClickAccor(item.route)">
-                        <AccordionItem :value="item.route">
+                    <Accordion class="w-full" collapsible type="single" :model-value="activeAccordion as string">
+                        <AccordionItem :value="item.name as string">
                             <AccordionTrigger
                                 class="font-normal flex items-center p-3 w-full transition hover:bg-slate-200 rounded-xl"
                                 :class="{'bg-slate-200': currentActive(item)}"
+                                @click="onClickAccor(item.name)"
                             >
-                                <div>
-                                    <span class="material-icons material-icons-outlined md-24">{{ item.icon }}</span>
-                                    <span class="ms-4">{{ item.name }}</span>
+                                <div class="flex">
+                                    <p class="material-icons material-icons-outlined md-24">
+                                        {{ item.meta?.icon }}
+                                    </p>
+                                    <p class="ms-4 ">
+                                        <span class="capitalize">{{ item.meta?.title }}</span>
+                                    </p>
                                 </div>
                             </AccordionTrigger>
                             <div class="mt-2"></div>
                             <AccordionContent
                                 v-for="child in item.children" :key="child.name" :value="child.name"
                                 class="ps-16 text-sm duration-200 hover:ms-1 hover:text-wc-primary">
-                                <RouterLink :to="{name: child.route}" class="block"
+                                <RouterLink :to="{name: child.name}" class="block capitalize"
                                             :class="{'text-wc-primary': currentActive(child)}">
-                                    {{ child.name }}
+                                    {{ child.meta?.title }}
                                 </RouterLink>
                             </AccordionContent>
                         </AccordionItem>
@@ -74,41 +78,31 @@
 
 <script setup lang="ts">
 import {ref, watch} from "vue";
-import {RouterLink, useRoute} from "vue-router";
-import {SidebarItems} from "@/utils/SidebarItems";
+import {type RouteRecordRaw, RouterLink, useRoute, useRouter} from "vue-router";
 import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from '@/components/ui/accordion'
-import type {SidebarItem} from "@/@types/global";
 
 const route = useRoute()
+const router = useRouter()
+const sidebarItems = router.options.routes.filter(route => route.name !== '404')
 
-const isDark = ref(false)
-const isOpen = ref(true)
-const activeAccordion = ref('')
+const activeAccordion = ref<RouteRecordRaw["name"]>('');
 
-const onChangeTheme = () => isDark.value = !isDark.value
-
-const currentActive = (itemRoute: SidebarItem) => {
-    if (!itemRoute.hasChild)
-        return route?.name === itemRoute.route.toLowerCase()
-
-    else if (itemRoute.children && itemRoute.children.length)
-        return itemRoute.children.find(child => child.route === route.name)
-}
-
-const onClickAccor = (routeName: string) => activeAccordion.value = routeName
+const currentActive = (currentRoute: RouteRecordRaw) => route.name === currentRoute.name
+const onClickAccor = (currentRouteName: RouteRecordRaw["name"]) =>
+    activeAccordion.value = currentRouteName === activeAccordion.value
+        ? '' : currentRouteName
 
 watch(
     () => route.name,
     () => {
-        const temp = SidebarItems.find((item: SidebarItem) => {
-            if (!item.hasChild)
-                return item.route === route.name
+        const temp = sidebarItems.find((item) => {
+            if (!item.children || !item.children.length)
+                return item.name === route.name
 
-            else if (item.children && item.children.length)
-                return item.children.find(child => child.route === route.name)
+            return item.children.find(child => child.name === route.name)
         })
 
-        return activeAccordion.value = temp?.route || ''
+        return activeAccordion.value = temp?.name || ''
     }
 )
 </script>

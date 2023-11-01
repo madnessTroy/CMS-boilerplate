@@ -8,12 +8,15 @@ const routes = [
 
     ...userRoutes,
 
-    ...profileRoutes,
+    // ...profileRoutes,
 
     {
-        path: '/:catchAll(.*)',
         name: '404',
+        path: '/:catchAll(.*)*',
         component: () => import('@/views/404.vue'),
+        meta: {
+            title: 'Not Found'
+        }
     }
 ]
 
