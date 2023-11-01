@@ -29,9 +29,10 @@
                      class="cursor-pointer mt-2"
                 >
                     <!-- No sub-menu -->
-                    <div class="flex items-center p-3 w-full transition hover:bg-slate-200 rounded-xl"
-                         :class="{'bg-slate-200': currentActive(item), 'justify-center': (isCompactSidebar && !isHoverSidebar) || (!isCompactSidebar && isHoverSidebar)}"
-                         v-if="!item.children || !item.children.length">
+                    <div
+                        class="flex items-center p-3 w-full transition hover:text-wc-primary hover:bg-slate-200 rounded-xl"
+                        :class="{'text-wc-primary bg-slate-200': currentActive(item), 'justify-center': (isCompactSidebar && !isHoverSidebar) || (!isCompactSidebar && isHoverSidebar)}"
+                        v-if="!item.children || !item.children.length">
                         <span class="material-icons material-icons-outlined md-24">{{ item.meta?.icon }}</span>
                         <RouterLink
                             v-show="(!isCompactSidebar && !isHoverSidebar) || (isCompactSidebar && isHoverSidebar)"
@@ -47,8 +48,8 @@
                         <Accordion class="w-full" collapsible type="single" :model-value="activeAccordion as string">
                             <AccordionItem :value="item.name as string">
                                 <AccordionTrigger
-                                    class="font-normal flex items-center p-3 w-full transition hover:bg-slate-200 rounded-xl"
-                                    :class="{'bg-slate-200': currentActive(item), 'justify-center': (isCompactSidebar && !isHoverSidebar) || (!isCompactSidebar && isHoverSidebar)}"
+                                    class="font-normal flex items-center p-3 w-full transition hover:text-wc-primary hover:bg-slate-200 rounded-xl"
+                                    :class="{'text-wc-primary bg-slate-200': currentActive(item), 'justify-center': (isCompactSidebar && !isHoverSidebar) || (!isCompactSidebar && isHoverSidebar)}"
                                     @click="onClickAccor(item.name)"
                                     :show-arrow="!isCompactSidebar || isHoverSidebar"
                                 >
@@ -82,11 +83,12 @@
                     <div class="w-10 h-10">
                         <img class="rounded-lg w-full h-full" src="@/assets/images/avatar.jpeg" alt="avatar">
                     </div>
-                    <div>
+                    <div v-show="(!isCompactSidebar && !isHoverSidebar) || (isCompactSidebar && isHoverSidebar)">
                         <p class="text-lg font-bold">Admin WC</p>
-                        <p class="text-xs">Administrations</p>
+                        <p class="text-xs text-gray-500">Administrator</p>
                     </div>
-                    <div class="ms-auto">
+                    <div v-show="(!isCompactSidebar && !isHoverSidebar) || (isCompactSidebar && isHoverSidebar)"
+                        class="ms-auto">
                         <DropdownMenu>
                             <DropdownMenuTrigger>
                                 <span class="material-icons material-symbols-outlined cursor-pointer md-24">
